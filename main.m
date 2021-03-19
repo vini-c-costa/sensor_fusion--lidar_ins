@@ -59,6 +59,19 @@ interpolation = interp_Lidar_INS(Lidar_XYZ, Lidar_XYZT, INS);
 
 profile viewer
 
+%% 7 -> Example plot
+
+pc1 = PC_Lidar{50};
+pc2 = PC_INS{50};
+
+pc1_denoise = pcdenoise(pc1);
+pc2_denoise = pcdenoise(pc2);
+
+subplot(1,2,1);
+pcshow(pc1);
+
+subplot(1,2,2);
+pcshow(pc2);
 
 
 
