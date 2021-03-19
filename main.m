@@ -51,8 +51,11 @@ p_lidar = [2 4 1]';
 % which wasn't possible the usage before.
 [PC_INS, PC_Lidar] = convert_PC2_to_PC(PC2_INS, PC2_Lidar);
 
+%% 5 -> Interpolation
 
-%% 5 -> Memory review
+interpolation = interp_Lidar_INS(Lidar_XYZ, Lidar_XYZT, INS);
+
+%% 6 -> Memory review
 
 profile viewer
 
