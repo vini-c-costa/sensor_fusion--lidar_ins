@@ -14,9 +14,54 @@ rosbag info 'Puck-uINS_2020-07-14-14-43-29.bag'
 % Read the bag to Lidar-INS format
 [bag, Lidar, INS] = read_bag(b);
 
-%% 2 -> Creating Lidar_concat & Lidar_XYZ
+%% 2 -> Creating Lidar_XYZT & Lidar_XYZ
 
-[Lidar_concat, Lidar_XYZ] = explore_Lidar(Lidar);
+% It will bring two different data:
+
+% -> Lidar_XYZ = [X,Y,Z] info
+% -> Lidar_XYZT = [X,Y,Z,T] info
+
+% The main skill of the function is to concatenate info
+% that used to be separated in Lidar.
+[Lidar_XYZT, Lidar_XYZ] = explore_Lidar(Lidar);
+
+%% 3 -> Extrinsic Calibration
+
+% The function will utilize the homogeneous transformation
+% from INS to Lidar to create PointCloud values to each point,
+% considering rotation and translation from INS to Lidar.
+
+% Configuring the homogeneous transformation:
+
+% Rotation (e.g R_lidar = rotx(deg1)*roty(deg2)*rotz(deg3)):
+R_lidar = rotx(30)*roty(45)*rotz(180);
+
+% Position (e.g p_lidar = [X, Y, Z]'):
+p_lidar = [2 4 1]';
+
+% Function that will create PointCloud values to each point,
+% in POV Lidar (PC_Lidar) and POV INS (PC_INS)
+
+[T, PC_Lidar, PC_INS] = extrinsic_calib(R_lidar, p_lidar, Lidar_XYZ);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
