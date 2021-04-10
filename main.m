@@ -11,8 +11,19 @@ profile -memory on  % Bring memory info
 b = 'Puck-uINS_2020-07-14-14-43-29.bag';
 rosbag info 'Puck-uINS_2020-07-14-14-43-29.bag'
 
+isLidar = true;
+isINS = false;
+
 % Read the bag to Lidar-INS format
-[bag, Lidar, INS] = read_bag(b);
+[bag, Lidar, INS] = read_bag(b, isLidar, isINS);
+
+if isLidar == false
+    clear Lidar
+end
+
+if isINS == false
+    clear INS
+end
 
 %% 2 -> Creating Lidar_XYZT & Lidar_XYZ
 
@@ -52,9 +63,9 @@ p_lidar = [2 4 1]';
 [PC_INS, PC_Lidar] = convert_PC2_to_PC(PC2_INS, PC2_Lidar);
 
 %% 5 -> Interpolation
-
-interpolation = interp_Lidar_INS(Lidar_XYZ, Lidar_XYZT, INS);
-
+if INS
+    interpolation = interp_Lidar_INS(Lidar_XYZ, Lidar_XYZT, INS);
+end
 %% 6 -> Memory review
 
 profile viewer
