@@ -8,22 +8,14 @@ profile -memory on  % Bring memory info
 %% 1 -> Opening and reading the bag
 
 % Define the bag
-b = 'Puck-uINS_2020-07-14-14-43-29.bag';
-rosbag info 'Puck-uINS_2020-07-14-14-43-29.bag'
+b = 'JetsonNano_PuckLite_2020-07-14-21-35-26.bag';
+rosbag info 'JetsonNano_PuckLite_2020-07-14-21-35-26.bag'
 
 isLidar = true;
 isINS = false;
 
 % Read the bag to Lidar-INS format
 [bag, Lidar, INS] = read_bag(b, isLidar, isINS);
-
-if isLidar == false
-    clear Lidar
-end
-
-if isINS == false
-    clear INS
-end
 
 %% 2 -> Creating Lidar_XYZT & Lidar_XYZ
 
@@ -79,10 +71,18 @@ pc1_denoise = pcdenoise(pc1);
 pc2_denoise = pcdenoise(pc2);
 
 subplot(1,2,1);
-pcshow(pc1);
+pcshow(pc1_denoise);
+title('PointCloud from LiDAR');
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
 
 subplot(1,2,2);
-pcshow(pc2);
+pcshow(pc2_denoise);
+title('PointCloud from INS');
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
 
 
 

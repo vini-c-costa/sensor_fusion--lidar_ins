@@ -5,9 +5,7 @@ function [bag, Lidar, INS] = read_bag(b, isLidar, isINS)
     % Bringing a bag as entrance, the function gives all the information
     % as output (entire read).
     %
-    % Trazendo como entrada a bag, tem-se como saída a leitura completa.
-    %
-    % Input: b
+    % Input: b, isLidar, isINS
     % Output: bag, Lidar, INS
 
     %% Opening the bag
