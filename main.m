@@ -62,7 +62,7 @@ end
 
 profile viewer
 
-%% 7 -> Example plot
+%% 7 -> Example plots
 
 pc1 = PC_Lidar{50};
 pc2 = PC_INS{50};
@@ -93,8 +93,11 @@ ylabel('Y(m)');
 zlabel('Z(m)');
 
 subplot (2,2,4);
-pcshowpair(pc1_denoise,pc2_denoise,'VerticalAxis','Z','VerticalAxisDir','Up')
+pcshowpair(pc1_denoise,pc2_denoise,'VerticalAxis', ...
+    'Z','VerticalAxisDir','Up')
 title('Difference Between POV LiDAR and INS');
 xlabel('X(m)');
 ylabel('Y(m)');
 zlabel('Z(m)');
+
+legend('LiDAR','INS');
