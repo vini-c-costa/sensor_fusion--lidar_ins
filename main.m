@@ -70,19 +70,31 @@ pc2 = PC_INS{50};
 pc1_denoise = pcdenoise(pc1);
 pc2_denoise = pcdenoise(pc2);
 
-subplot(1,2,1);
+subplot(2,2,1);
 pcshow(pc1_denoise);
 title('PointCloud from LiDAR');
-xlabel('X');
-ylabel('Y');
-zlabel('Z');
+xlabel('X(m)');
+ylabel('Y(m)');
+zlabel('Z(m)');
 
-subplot(1,2,2);
+subplot(2,2,2);
 pcshow(pc2_denoise);
 title('PointCloud from INS');
-xlabel('X');
-ylabel('Y');
-zlabel('Z');
+xlabel('X(m)');
+ylabel('Y(m)');
+zlabel('Z(m)');
 
+subplot (2,2,3);
+pc_merge = pcmerge(pc1_denoise, pc2_denoise, 0.1);
+pcshow(pc_merge);
+title('PointCloud merged');
+xlabel('X(m)');
+ylabel('Y(m)');
+zlabel('Z(m)');
 
-
+subplot (2,2,4);
+pcshowpair(pc1_denoise,pc2_denoise,'VerticalAxis','Z','VerticalAxisDir','Up')
+title('Difference Between POV LiDAR and INS');
+xlabel('X(m)');
+ylabel('Y(m)');
+zlabel('Z(m)');
