@@ -17,13 +17,13 @@ function [bag, Lidar, INS] = read_bag(b, isLidar, isINS)
     % Outputs = Lidar{} e INS{}
     
     if isLidar
-        Lidar = open_Lidar(bag, bag.EndTime - bag.StartTime);
+        Lidar = open_Lidar(bag, 2);
     else
         Lidar = 0;
     end
     
     if isINS
-        INS = open_INS(bag, bag.EndTime - bag.StartTime);
+        INS = open_INS(bag, 2);
     else
         INS = 0;
     end
@@ -31,6 +31,6 @@ function [bag, Lidar, INS] = read_bag(b, isLidar, isINS)
     % if you want to read just part of the bag, comment
     % the two lines above, and use the command below:
     %
-    % Lidar = openBagLidar(bag, 5);
-    % INS   = openBagUINS (bag, 5);
+    % Lidar = open_Lidar(bag, 5);
+    % INS   = open_INS (bag, 5);
 end

@@ -119,19 +119,23 @@ for T = 1:60:t2
 %     uINS.INS_tt.Properties.VariableNames = {'PosX', 'PosY', 'PosZ', 'OriW', 'OriX', 'OriY', 'OriZ'};
 
     %Todos os dados de posicao e orientacao no mesmo lugar
+    
+    uINS.XYZ(:,1) = cellfun(@(m) m.Pose.Pose.Position.X, uINS.INS);
+    uINS.XYZ(:,2) = cellfun(@(m) m.Pose.Pose.Position.Y, uINS.INS);
+    uINS.XYZ(:,3) = cellfun(@(m) m.Pose.Pose.Position.Z, uINS.INS);
 
     uINS.XYZT(:,1) = cellfun(@(m) m.Pose.Pose.Position.X, uINS.INS);
     uINS.XYZT(:,2) = cellfun(@(m) m.Pose.Pose.Position.Y, uINS.INS);
     uINS.XYZT(:,3) = cellfun(@(m) m.Pose.Pose.Position.Z, uINS.INS);
     uINS.XYZT(:,4) = time_INS(:,3);
     
-    uINS.XYZWXYZT(:,1) = cellfun(@(m) m.Pose.Pose.Position.X, uINS.INS);
-    uINS.XYZWXYZT(:,2) = cellfun(@(m) m.Pose.Pose.Position.Y, uINS.INS);
-    uINS.XYZWXYZT(:,3) = cellfun(@(m) m.Pose.Pose.Position.Z, uINS.INS);
-    uINS.XYZWXYZT(:,4) = cellfun(@(m) m.Pose.Pose.Orientation.W, uINS.INS);
-    uINS.XYZWXYZT(:,5) = cellfun(@(m) m.Pose.Pose.Orientation.X, uINS.INS);
-    uINS.XYZWXYZT(:,6) = cellfun(@(m) m.Pose.Pose.Orientation.Y, uINS.INS);
-    uINS.XYZWXYZT(:,7) = cellfun(@(m) m.Pose.Pose.Orientation.Z, uINS.INS);
+    uINS.XYZWXYZ(:,1) = cellfun(@(m) m.Pose.Pose.Position.X, uINS.INS);
+    uINS.XYZWXYZ(:,2) = cellfun(@(m) m.Pose.Pose.Position.Y, uINS.INS);
+    uINS.XYZWXYZ(:,3) = cellfun(@(m) m.Pose.Pose.Position.Z, uINS.INS);
+    uINS.XYZWXYZ(:,4) = cellfun(@(m) m.Pose.Pose.Orientation.W, uINS.INS);
+    uINS.XYZWXYZ(:,5) = cellfun(@(m) m.Pose.Pose.Orientation.X, uINS.INS);
+    uINS.XYZWXYZ(:,6) = cellfun(@(m) m.Pose.Pose.Orientation.Y, uINS.INS);
+    uINS.XYZWXYZ(:,7) = cellfun(@(m) m.Pose.Pose.Orientation.Z, uINS.INS);
     % uINS.XYZWXYZT(:,8) = cellfun(@(m) m.time_MAG(:, 3), uINS);
     % uINS.XYZWXYZ_tt = timetable(uINS.DateTimeINS, uINS.XYZWXYZ);
     % uINS.XYZWXYZ_tt.Properties.VariableNames = {'PosX', 'PosY', 'PosZ', 'OriW', 'OriX', 'OriY', 'OriZ'};
