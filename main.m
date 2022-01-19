@@ -8,10 +8,10 @@ profile -memory on  % Bring memory info
 %% 1 -> Opening and reading the bag
 
 % Define the bag
-b = 'Puck-uINS_2020-07-14-14-43-29.bag';
-rosbag info 'Puck-uINS_2020-07-14-14-43-29.bag'
+b = 'bag_InertialSense_2022_01_14.bag';
+rosbag info 'bag_InertialSense_2022_01_14.bag'
 
-isLidar = true;
+isLidar = false;
 isINS = true;
 
 % Read the bag to Lidar-INS format
@@ -26,8 +26,10 @@ isINS = true;
 %
 % The main skill of the function is to concatenate info
 % that used to be separated in Lidar.
-[Lidar_XYZT, Lidar_XYZ] = explore_Lidar(Lidar);
 
+if isLidar
+    [Lidar_XYZT, Lidar_XYZ] = explore_Lidar(Lidar);
+end
 %% 3 -> Extrinsic Calibration
 
 % The function will utilize the homogeneous transformation
@@ -35,27 +37,28 @@ isINS = true;
 % considering rotation and translation from INS to Lidar.
 %
 % Configuring the homogeneous transformation:
+if isLidar && isINS
 
-% Rotation (e.g R_lidar = rotx(deg1)*roty(deg2)*rotz(deg3)):
-R_lidar = rotx(0)*roty(0)*rotz(180);
+    % Rotation (e.g R_lidar = rotx(deg1)*roty(deg2)*rotz(deg3)):
+    R_lidar = rotx(0)*roty(0)*rotz(180);
 
-% Position (e.g p_lidar = [X, Y, Z]'):
-p_lidar = [0 0 1]';
+    % Position (e.g p_lidar = [X, Y, Z]'):
+    p_lidar = [0 0 1]';
 
-% Function that will create PointCloud values to each point,
-% in POV Lidar (PC2_Lidar) and POV INS (PC2_INS)
+    % Function that will create PointCloud values to each point,
+    % in POV Lidar (PC2_Lidar) and POV INS (PC2_INS)
 
-[T, PC2_Lidar, PC2_INS] = extrinsic_calib(R_lidar, p_lidar, Lidar_XYZ);
+    [T, PC2_Lidar, PC2_INS] = extrinsic_calib(R_lidar, p_lidar, Lidar_XYZ);
 
-%% 4 -> Converting PC2 (ROS) to PC (Computer Vision Toolbox)
+    %% 4 -> Converting PC2 (ROS) to PC (Computer Vision Toolbox)
 
-% PointCloud2 to PointCloud is one of the main convertions of the
-% program, because it makes Computer Vision Toolbox available,
-% which wasn't possible the usage before.
-[PC_INS, PC_Lidar] = convert_PC2_to_PC(PC2_INS, PC2_Lidar);
-
+    % PointCloud2 to PointCloud is one of the main convertions of the
+    % program, because it makes Computer Vision Toolbox available,
+    % which wasn't possible the usage before.
+    [PC_INS, PC_Lidar] = convert_PC2_to_PC(PC2_INS, PC2_Lidar);
+end
 %% 5 -> Interpolation
-if isINS
+if isINS && isLidar
     interpolation = interp_Lidar_INS(Lidar_XYZ, Lidar_XYZT, INS);
 end
 %% 6 -> Memory review
@@ -118,7 +121,8 @@ for i = 1:1:row5
     for j = 1:1:4
         temp_transform{j,4} = temp_pos(j,1);
     end
-    transformation_matrix(i,1)= cell2mat(temp_transform);
+    
+    transformation_matrix{i,1}= cell2mat(temp_transform);
     
     for j = 1:1:4
         for k = 1:1:4
@@ -160,17 +164,62 @@ INS{1,1}.XYZ(1,3) = 0;
 for i = 2:1:row3
     
     INS_pos_correction{i,1} = INS_XYZ_cell{i,1}' - first_pos{1}';
-    INS_pos_correction{i,2} = INS_XYZ_cell{i,1}' - first_pos{2}';
-    INS_pos_correction{i,3} = INS_XYZ_cell{i,1}' - first_pos{3}';
+    INS_pos_correction{i,2} = INS_XYZ_cell{i,2}' - first_pos{2}';
+    INS_pos_correction{i,3} = INS_XYZ_cell{i,3}' - first_pos{3}';
 end
-figure
 
-scatter3(INS{1,1}.XYZ(1,1), INS{1,1}.XYZ(1,2), INS{1,1}.XYZ(1,3))
+INS_pos_correction_mat = cell2mat(INS_pos_correction);
+
+x = INS_pos_correction_mat(:,1);
+y = INS_pos_correction_mat(:,2);
+z = INS_pos_correction_mat(:,3);    
+% 
+% figure
+% hold on
+% plot3(x,y,z)
+% plot3(x,y,z)
+
+sz = [row3,3];
+varTypes = ["double","double","double"];
+varNames = ["x","y","z"];
+
+% INS_pos_correction_table = table('Size', sz, 'VariableTypes', varTypes, 'VariableNames', varNames);
+
+% figure
+view (3)
+hold on
+for i = 1:1:row3
+    scatter3(INS_pos_correction{i,1}, INS_pos_correction{i,2}, INS_pos_correction{i,3})
+end
+
+an = animatedline;
+for i = 1:1:(row3-1)
+    addpoints(an,x(i),y(i),z(i));
+    drawnow
+end
+
+plot3 (x,y,z)
+
+% scatter3(INS_pos_correction_table)
+
 xlabel ('x')
 ylabel ('y')
 zlabel ('z')
 grid on
 axis ('equal')
+
+%%
+% view
+% hold on
+% scatter3(INS_pos_correction{2,1}, INS_pos_correction{2,2}, INS_pos_correction{2,3})
+% scatter3(INS_pos_correction{3876,1}, INS_pos_correction{3876,2}, INS_pos_correction{3876,3})
+% 
+% xlabel ('x')
+% ylabel ('y')
+% zlabel ('z')
+% grid on
+% axis ('equal')
+%%
 
 %% 7 -> Example plots
 
